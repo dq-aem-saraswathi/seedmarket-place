@@ -1,6 +1,7 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 const mockAddresses = [
   {
@@ -17,28 +18,71 @@ const mockAddresses = [
 
 export default function AddressesScreen() {
   return (
-    <View className="flex-1 bg-white p-4">
-      <View className="flex-row items-center mb-5">
+    <View style={styles.container}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => router.push("/(root)/(tabs)/profile")}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-xl font-bold ml-3">Saved Addresses</Text>
+        <Text style={styles.title}>Saved Addresses</Text>
       </View>
 
       <FlatList
         data={mockAddresses}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View className="bg-gray-100 p-4 rounded-xl mb-3">
-            <Text className="font-semibold">{item.label}</Text>
-            <Text className="text-gray-600">{item.address}</Text>
-          </View>
+          <AnimatedCard style={styles.addressCard}>
+            <Text style={styles.addressLabel}>{item.label}</Text>
+            <Text style={styles.addressText}>{item.address}</Text>
+          </AnimatedCard>
         )}
       />
 
-      <TouchableOpacity className="mt-4 bg-green-600 py-3 rounded-xl items-center">
-        <Text className="text-white font-semibold">+ Add New Address</Text>
+      <TouchableOpacity style={styles.addButton}>
+        <Text style={styles.addButtonText}>+ Add New Address</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 12,
+  },
+  addressCard: {
+    marginBottom: 12,
+    marginHorizontal: 0,
+  },
+  addressLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  addressText: {
+    fontSize: 14,
+    color: "#6b7280",
+  },
+  addButton: {
+    marginTop: 16,
+    backgroundColor: "#16a34a",
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  addButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+});

@@ -1,7 +1,8 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 export default function PrivacyPolicyScreen() {
   const [policyText, setPolicyText] = useState<string>("");
@@ -31,18 +32,45 @@ export default function PrivacyPolicyScreen() {
   }, []);
 
   return (
-    <ScrollView className="flex-1 bg-white p-4">
-      <View className="flex-row items-center">
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => router.push("/(root)/(tabs)/profile")}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        {/* <Text style={{ fontSize: 20, fontWeight: "bold", marginLeft: 12 }}> */}
-        <Text className="text-3xl font-bold ml-3">Privacy Policy</Text>
+        <Text style={styles.title}>Privacy Policy</Text>
       </View>
 
-      <Text className="text-base text-gray-700 leading-6 whitespace-pre-line">
-        {policyText}
-      </Text>
+      <AnimatedCard style={styles.contentCard}>
+        <Text style={styles.content}>
+          {policyText}
+        </Text>
+      </AnimatedCard>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginLeft: 12,
+  },
+  contentCard: {
+    marginHorizontal: 0,
+  },
+  content: {
+    fontSize: 16,
+    color: "#374151",
+    lineHeight: 24,
+  },
+});

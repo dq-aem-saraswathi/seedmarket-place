@@ -17,6 +17,7 @@ import useFetch from "@/hooks/useFetch";
 import CreateProduct from "@/app/components/CreateProduct";
 import { useRouter } from "expo-router"; // ✅ Import router
 import { useDarkMode } from "@/app/context/DarkModeContext";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 import Constants from "expo-constants";
 const BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl;
@@ -122,10 +123,11 @@ export default function Products() {
           }
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={[styles.card, { backgroundColor: colors.surface }]}
+              style={styles.cardContainer}
               activeOpacity={0.9}
               onPress={() => router.push(`/product/${item.id}`)}
             >
+            <AnimatedCard style={styles.card}>
               {/* Image section */}
               <View style={styles.imageContainer}>
                 <Image
@@ -210,6 +212,7 @@ export default function Products() {
                   <Ionicons name="trash-outline" size={24} color="red" />
                 </TouchableOpacity>
               </View>
+            </AnimatedCard>
             </TouchableOpacity>
           )}
         />
@@ -256,17 +259,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  card: {
-    flexDirection: "row",
+  cardContainer: {
     marginHorizontal: 16,
     marginVertical: 8,
-    padding: 12,
-    borderRadius: 8,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+  },
+  card: {
+    flexDirection: "row",
     alignItems: "center",
+    padding: 12,
   },
   cardContent: { flex: 1, marginLeft: 12 },
   cardTitle: {

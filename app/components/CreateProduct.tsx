@@ -12,13 +12,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { MotiView } from "moti";
-import { LinearGradient } from "expo-linear-gradient";
 import Constants from "expo-constants";
 
 import Input from "./ui/Input";
-import Button from "./ui/Button";
-import Card from "./ui/Card";
+import AnimatedCard from "./ui/AnimatedCard";
 import { createProduct, updateProduct } from "@/api/services";
+import { useDarkMode } from "@/app/context/DarkModeContext";
 
 const BASE_URL =
   Constants.expoConfig?.extra?.apiBaseUrl || "http://localhost:8081";
@@ -30,6 +29,7 @@ export default function CreateProduct({
   onClose: () => void;
   editData?: any;
 }) {
+  const { colors } = useDarkMode();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [quantityKg, setQuantityKg] = useState("");
@@ -120,34 +120,34 @@ export default function CreateProduct({
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={["#10B981", "#059669"]} style={styles.header}>
+      <View style={[styles.header, { backgroundColor: colors.headerBackground }]}>
         <SafeAreaView>
           <View style={styles.headerContent}>
             <TouchableOpacity onPress={onClose}>
-              <Ionicons name="close" size={24} color="#fff" />
+              <Ionicons name="close" size={24} color={colors.headerText} />
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>
+            <Text style={[styles.headerTitle, { color: colors.headerText }]}>
               {editData ? "Edit Product" : "Add Product"}
             </Text>
             <View style={{ width: 24 }} />
           </View>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: 80 }}
         style={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <Card animated style={styles.card}>
-          <Text style={styles.label}>Product Image</Text>
+        <AnimatedCard style={styles.card}>
+          <Text style={[styles.label, { color: colors.text }]}>Product Image</Text>
           <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
             {image ? (
               <Image source={{ uri: image }} style={styles.selectedImage} />
             ) : (
               <View style={styles.imagePlaceholder}>
                 <Ionicons name="image-outline" size={36} color="#9CA3AF" />
-                <Text style={{ fontSize: 12, color: "#9CA3AF", marginTop: 6 }}>
+                <Text style={[styles.placeholderText, { color: colors.textSecondary }]}>
                   Tap to upload
                 </Text>
               </View>
@@ -198,22 +198,22 @@ export default function CreateProduct({
             style={{ marginTop: 24 }}
           /> */}
           <TouchableOpacity
-            style={[styles.button, loading && { opacity: 0.7 }]}
+            style={[styles.button, { backgroundColor: colors.primary }, loading && { opacity: 0.7 }]}
             onPress={handleSubmit}
             disabled={loading}
           >
-            <Text style={{ color: "white" }}>
+            <Text style={[styles.buttonText, { color: colors.surface }]}>
               {loading ? "Saving..." : editData ? "Update" : "Submit"}
             </Text>
           </TouchableOpacity>
-        </Card>
+        </AnimatedCard>
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F9FAFB" },
+  container: { flex: 1 },
   scroll: { flex: 1 },
   header: { paddingBottom: 16 },
   headerContent: {
@@ -226,17 +226,18 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#fff",
   },
   card: {
     margin: 16,
-    padding: 20,
   },
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#374151",
     marginBottom: 8,
+  },
+  placeholderText: {
+    fontSize: 12,
+    marginTop: 6,
   },
   imagePicker: {
     alignSelf: "center",
@@ -261,10 +262,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    backgroundColor: "green",
     padding: 12,
-    borderRadius: 4,
+    borderRadius: 8,
     alignItems: "center",
     marginTop: 16,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

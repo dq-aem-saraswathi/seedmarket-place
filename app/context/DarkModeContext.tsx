@@ -16,6 +16,12 @@ interface DarkModeContextProps {
     card: string;
     headerBackground: string;
     headerText: string;
+    badgeBackground: string;  
+    badgeText: string;  
+    tabBarBackground: string;   
+    tabBarBorder: string;       
+    tabBarActive: string;      
+    tabBarInactive: string;      
   };
 }
 

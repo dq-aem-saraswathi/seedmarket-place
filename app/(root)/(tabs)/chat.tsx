@@ -23,6 +23,7 @@ import { ChatConversation, UserModel } from "@/api/types";
 
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import Input from "@/app/components/ui/Input";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 interface ChatUser {
   id: string;
@@ -132,7 +133,7 @@ export default function ChatScreen() {
     index: number;
   }) => (
     <TouchableOpacity onPress={() => handleChatPress(item)} activeOpacity={0.7}>
-      <View style={[styles.chatItem, { backgroundColor: colors.surface }]}>
+      <AnimatedCard style={styles.chatItem}>
         <View style={styles.chatContent}>
           <View style={styles.avatarContainer}>
             <Image
@@ -174,7 +175,7 @@ export default function ChatScreen() {
 
           <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
         </View>
-      </View>
+      </AnimatedCard>
     </TouchableOpacity>
   );
 
@@ -227,8 +228,8 @@ export default function ChatScreen() {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <View style={styles.emptyCard}>
-            <View style={{ alignItems: "center" }}>
+          <AnimatedCard style={styles.emptyCard}>
+            <View style={styles.emptyContent}>
               <Ionicons name="chatbubbles-outline" size={48} color="#9CA3AF" />
               <Text style={[styles.emptyTitle, { color: colors.text }]}>
                 No conversations yet
@@ -237,7 +238,7 @@ export default function ChatScreen() {
                 Start chatting with sellers to negotiate prices
               </Text>
             </View>
-          </View>
+          </AnimatedCard>
         }
       />
     </View>
@@ -278,13 +279,6 @@ const styles = StyleSheet.create({
   chatItem: {
     marginHorizontal: 16,
     marginVertical: 4,
-    padding: 12,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
   },
   chatContent: {
     flexDirection: "row",
@@ -362,6 +356,9 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     marginHorizontal: 20,
     marginTop: 40,
+  },
+  emptyContent: {
+    alignItems: "center",
   },
   emptyTitle: {
     fontSize: 18,

@@ -1,4 +1,3 @@
-// app/_layout.tsx or app/(tabs)/_layout.tsx
 import { Tabs } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
@@ -7,8 +6,6 @@ import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getNotifications,
-  getReceivedNotifications,
-  getSentNotifications,
 } from "@/api/services";
 import {
   connectWebSocket,
@@ -61,6 +58,7 @@ export default function TabsLayout() {
     const uid = await AsyncStorage.getItem("userId");
     if (!uid) return;
     setUserId(uid);
+    
     connectWebSocket(() => {
       subscribeToSeller(uid, (msg) => {
         try {
@@ -72,6 +70,7 @@ export default function TabsLayout() {
           logger.error("WebSocket message parse error", err);
         }
       });
+      
       subscribeToBuyer(uid, (msg) => {
         try {
           const newNotif: Notification = JSON.parse(msg.body);
@@ -103,6 +102,7 @@ export default function TabsLayout() {
   useEffect(() => {
     fetchAllNotifications();
     setupWebSocket();
+    
     return () => disconnectWebSocket();
   }, []);
 
@@ -122,8 +122,6 @@ export default function TabsLayout() {
       </View>
     );
   };
-
-  const totalBadgeCount = badges.notifications;
 
   return (
     <Tabs

@@ -22,6 +22,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Notification } from "@/api/types";
 import { markNotificationCleared } from "@/api/services";
 import { useDarkMode } from "@/app/context/DarkModeContext";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 export default function NotificationsScreen() {
   const { colors } = useDarkMode();
@@ -151,7 +152,7 @@ export default function NotificationsScreen() {
             }
 
             return (
-              <View style={[styles.card, { backgroundColor: colors.surface }]}>
+              <AnimatedCard style={styles.card}>
                 <View style={styles.row}>
                   <MaterialIcons
                     name={iconName}
@@ -180,7 +181,7 @@ export default function NotificationsScreen() {
                     <Ionicons name="close" size={20} color={colors.textSecondary} />
                   </TouchableOpacity>
                 </View>
-              </View>
+              </AnimatedCard>
             );
           }}
         />
@@ -207,14 +208,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: { fontSize: 20, fontWeight: "bold" },
   card: {
-    padding: 14,
-    borderRadius: 10,
     marginBottom: 12,
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    marginHorizontal: 16,
   },
   row: { flexDirection: "row", alignItems: "center" },
   title: { fontSize: 16, fontWeight: "600" },

@@ -24,6 +24,7 @@ import ProductCard from "@/app/components/ProductCard";
 
 import Input from "@/app/components/ui/Input";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 export default function Home() {
   const { colors } = useDarkMode();
@@ -45,7 +46,7 @@ export default function Home() {
   } = useFetch(() => getProducts(0, 50, filters.min, filters.max));
 
   const notifications = useSelector(
-    (state: RootState) => state.notifications.notifications.length
+    (state: RootState) => state.notifications.notifications
   );
 
   useFocusEffect(
@@ -152,13 +153,13 @@ export default function Home() {
             >
               <Ionicons
                 name="notifications-outline"
-                size={32} // Increased from 24 to 28
+                size={32}
                 color={colors.headerText}
               />
-              {notifications > 0 && (
+              {notifications.length > 0 && (
                 <View style={[styles.badge, { backgroundColor: colors.badgeBackground }]}>
                   <Text style={[styles.badgeText, { color: colors.badgeText }]}>
-                    {notifications > 99 ? "99+" : notifications}
+                    {notifications.length > 99 ? "99+" : notifications.length}
                   </Text>
                 </View>
               )}
@@ -182,11 +183,11 @@ export default function Home() {
     const userName = "Farmer";
 
     if (hour < 12) {
-      return `Good morning, ${userName} ! `;
+      return `Good morning, ${userName}!`;
     } else if (hour < 17) {
-      return `Good afternoon, ${userName} ! `;
+      return `Good afternoon, ${userName}!`;
     } else {
-      return `Good evening, ${userName} ! `;
+      return `Good evening, ${userName}!`;
     }
   };
 
@@ -202,9 +203,9 @@ export default function Home() {
 
       <TouchableOpacity
         onPress={() => setPriceModalVisible(true)}
-        style={styles.filterButton}
+        style={[styles.filterButton, { backgroundColor: colors.surface }]}
       >
-        <Ionicons name="options-outline" size={20} color="#8B5CF6" />
+        <Ionicons name="options-outline" size={20} color={colors.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -219,16 +220,15 @@ export default function Home() {
       </View>
     );
   }
+
   if (error) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
         <Ionicons name="alert-circle-outline" size={48} color="#EF4444" />
-         ̰
         <Text style={[styles.errorText, { color: colors.text }]}>
           Failed to load products
         </Text>
-        {/* <Button title="Retry" onPress={refetch} /> */}
-        <TouchableOpacity style={styles.retryButton} onPress={refetch}>
+        <TouchableOpacity style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={refetch}>
           <Text style={[styles.retryButtonText, { color: colors.surface }]}>
             Retry
           </Text>
@@ -264,8 +264,8 @@ export default function Home() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={
-          <View style={styles.emptyCard}>
-            <View>
+          <AnimatedCard style={styles.emptyCard}>
+            <View style={styles.emptyContent}>
               <Ionicons name="leaf-outline" size={48} color="#9CA3AF" />
               <Text style={[styles.emptyTitle, { color: colors.text }]}>
                 No products found
@@ -274,7 +274,7 @@ export default function Home() {
                 Try adjusting your search or filters
               </Text>
             </View>
-          </View>
+          </AnimatedCard>
         }
       />
 
@@ -286,7 +286,7 @@ export default function Home() {
         onRequestClose={() => setPriceModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <AnimatedCard style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>
                 Filter by Price
@@ -324,9 +324,9 @@ export default function Home() {
             />
 
             <TouchableOpacity
-              style={styles.applyButton}
+              style={[styles.applyButton, { backgroundColor: colors.primary }]}
               onPress={() => {
-                setPriceModalVisible(true);
+                setPriceModalVisible(false);
                 refetch();
               }}
             >
@@ -334,7 +334,7 @@ export default function Home() {
                 Apply Filter
               </Text>
             </TouchableOpacity>
-          </View>
+          </AnimatedCard>
         </View>
       </Modal>
 
@@ -346,7 +346,7 @@ export default function Home() {
         onRequestClose={() => setRequestModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
+          <AnimatedCard style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>
                 Request Product
@@ -382,14 +382,16 @@ export default function Home() {
                     <TouchableOpacity
                       style={[
                         styles.unitButton,
-                        unit === "kg" && styles.unitButtonActive,
+                        { backgroundColor: colors.background, borderColor: colors.border },
+                        unit === "kg" && { backgroundColor: colors.primary },
                       ]}
                       onPress={() => setUnit("kg")}
                     >
                       <Text
                         style={[
                           styles.unitButtonText,
-                          unit === "kg" && styles.unitButtonTextActive,
+                          { color: colors.textSecondary },
+                          unit === "kg" && { color: colors.surface },
                         ]}
                       >
                         Kg
@@ -398,14 +400,16 @@ export default function Home() {
                     <TouchableOpacity
                       style={[
                         styles.unitButton,
-                        unit === "g" && styles.unitButtonActive,
+                        { backgroundColor: colors.background, borderColor: colors.border },
+                        unit === "g" && { backgroundColor: colors.primary },
                       ]}
                       onPress={() => setUnit("g")}
                     >
                       <Text
                         style={[
                           styles.unitButtonText,
-                          unit === "g" && styles.unitButtonTextActive,
+                          { color: colors.textSecondary },
+                          unit === "g" && { color: colors.surface },
                         ]}
                       >
                         Grams
@@ -415,7 +419,7 @@ export default function Home() {
                 </View>
 
                 {inputQty && (
-                  <View style={styles.totalContainer}>
+                  <View style={[styles.totalContainer, { backgroundColor: colors.background }]}>
                     <Text style={[styles.totalLabel, { color: colors.text }]}>
                       Total Amount:
                     </Text>
@@ -432,7 +436,7 @@ export default function Home() {
                 )}
 
                 <TouchableOpacity
-                  style={styles.requestSubmitButton}
+                  style={[styles.requestSubmitButton, { backgroundColor: colors.primary }]}
                   onPress={confirmRequest}
                 >
                   <Text style={[styles.requestSubmitButtonText, { color: colors.surface }]}>
@@ -441,7 +445,7 @@ export default function Home() {
                 </TouchableOpacity>
               </>
             )}
-          </View>
+          </AnimatedCard>
         </View>
       </Modal>
     </View>
@@ -470,18 +474,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 4,
   },
-
   headerActions: {
     flexDirection: "row",
     alignItems: "center",
     gap: 14,
-    flexWrap: "wrap", // allow wrap on smaller screens
+    flexWrap: "wrap",
     maxWidth: 160,
   },
   iconButton: {
     position: "relative",
   },
-
   badge: {
     position: "absolute",
     top: 0,
@@ -493,12 +495,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   badgeText: {
     fontSize: 10,
     fontWeight: "bold",
   },
-
   searchContainer: {
     flexDirection: "row",
     paddingHorizontal: 20,
@@ -511,7 +511,6 @@ const styles = StyleSheet.create({
     marginVertical: 0,
   },
   filterButton: {
-    backgroundColor: "#FFFFFF",
     padding: 12,
     borderRadius: 12,
     shadowColor: "#000",
@@ -549,6 +548,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 40,
   },
+  emptyContent: {
+    alignItems: "center",
+  },
   emptyTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -567,8 +569,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   modalContent: {
-    borderRadius: 20,
-    padding: 24,
     width: "100%",
     maxWidth: 400,
   },
@@ -593,6 +593,8 @@ const styles = StyleSheet.create({
   },
   applyButton: {
     marginTop: 20,
+    borderRadius: 12,
+    paddingVertical: 12,
   },
   productName: {
     fontSize: 18,
@@ -616,30 +618,19 @@ const styles = StyleSheet.create({
   },
   unitButton: {
     flex: 1,
-    backgroundColor: "#F3F4F6",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-  },
-  unitButtonActive: {
-    backgroundColor: "#8B5CF6",
-    borderColor: "#8B5CF6",
   },
   unitButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
-  },
-  unitButtonTextActive: {
-    color: "#FFFFFF",
   },
   totalContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#F3F4F6",
     padding: 16,
     borderRadius: 12,
     marginBottom: 20,
@@ -654,38 +645,27 @@ const styles = StyleSheet.create({
   },
   requestSubmitButton: {
     marginTop: 8,
+    borderRadius: 12,
+    paddingVertical: 12,
   },
   applyButtonText: {
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-    backgroundColor: "#8B5CF6",
-    paddingVertical: 12,
-    width: "50%",
-    marginLeft: "25%",
-    borderRadius: 12,
   },
   requestSubmitButtonText: {
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-    backgroundColor: "#8B5CF6",
-    paddingVertical: 12,
-    width: "50%",
-    marginLeft: "25%",
-    borderRadius: 12,
   },
   retryButton: {
-    backgroundColor: "#ff3b30",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 6,
     alignSelf: "center",
     marginTop: 16,
   },
-
   retryButtonText: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",

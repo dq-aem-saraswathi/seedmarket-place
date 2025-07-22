@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getUser } from "@/api/services";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 export default function ViewProfileScreen() {
   const [user, setUser] = useState<any>(null);
@@ -60,7 +61,7 @@ export default function ViewProfileScreen() {
       </View>
 
       {/* Profile Info */}
-      <View style={styles.infoCard}>
+      <AnimatedCard style={styles.infoCard}>
         <ProfileItem label="📱 Mobile" value={user.mobileNumber} />
         <ProfileItem label="✉️ Email" value={user.email} />
         <ProfileItem
@@ -79,7 +80,7 @@ export default function ViewProfileScreen() {
           label="🛡️ Status"
           value={user.approvalStatus ? "Approved" : "Pending"}
         />
-      </View>
+      </AnimatedCard>
     </ScrollView>
   );
 }
@@ -137,15 +138,8 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   infoCard: {
-    backgroundColor: "#f8f8f8",
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
     marginBottom: 20,
+    marginHorizontal: 20,
   },
   infoItem: {
     flexDirection: "row",

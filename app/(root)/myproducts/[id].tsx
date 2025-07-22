@@ -16,6 +16,7 @@ import { viewProduct, getReceivedNotifications } from "@/api/services";
 import { ProductDTO } from "@/api/types";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import Constants from "expo-constants";
+import AnimatedCard from "@/app/components/ui/AnimatedCard";
 
 const BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl;
 
@@ -251,7 +252,7 @@ export default function MyProductDetail() {
         </View>
 
         {/* Product Summary */}
-        <View style={styles.productCard}>
+        <AnimatedCard style={styles.productCard}>
           <View style={styles.productContent}>
             <Image
               source={{
@@ -289,10 +290,10 @@ export default function MyProductDetail() {
               </View>
             </View>
           </View>
-        </View>
+        </AnimatedCard>
 
         {/* Status Counts */}
-        <View style={styles.statusCard}>
+        <AnimatedCard style={styles.statusCard}>
           <Text style={styles.sectionTitle}>Order Status Summary</Text>
           <View style={styles.statusGrid}>
             <View style={styles.statusItem}>
@@ -327,10 +328,10 @@ export default function MyProductDetail() {
               <Text style={styles.statusLabel}>Rejected</Text>
             </View>
           </View>
-        </View>
+        </AnimatedCard>
 
         {/* Orders List */}
-        <View style={styles.ordersSection}>
+        <AnimatedCard style={styles.ordersSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Recent Orders</Text>
             <TouchableOpacity
@@ -357,10 +358,10 @@ export default function MyProductDetail() {
               </Text>
             </View>
           )}
-        </View>
+        </AnimatedCard>
 
         {/* Reviews Section */}
-        <View style={styles.reviewsSection}>
+        <AnimatedCard style={styles.reviewsSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Customer Reviews</Text>
             <TouchableOpacity>
@@ -375,7 +376,7 @@ export default function MyProductDetail() {
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
           />
-        </View>
+        </AnimatedCard>
       </ScrollView>
     </View>
   );
