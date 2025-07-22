@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Appearance, ColorSchemeName, StatusBar } from "react-native";
+import { Appearance, ColorSchemeName, StatusBar, Platform } from "react-native";
 
 interface DarkModeContextProps {
   isDarkMode: boolean;

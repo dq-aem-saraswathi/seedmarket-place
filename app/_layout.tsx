@@ -5,6 +5,7 @@ import "./global.css";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { DarkModeProvider } from "@/app/context/DarkModeContext";
 import { useFrameworkReady } from "@/hooks/useFrameworkReady";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -12,6 +13,7 @@ export default function RootLayout() {
     <AuthProvider>
       <DarkModeProvider>
         <Provider store={store}>
+          <StatusBar style="auto" />
           <Slot />
         </Provider>
       </DarkModeProvider>

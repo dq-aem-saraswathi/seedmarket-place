@@ -14,8 +14,10 @@ import { router } from "expo-router";
 import { getSentNotifications } from "@/api/services";
 import { useApi } from "@/hooks/useApi";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
+import { useDarkMode } from "@/app/context/DarkModeContext";
 
 export default function OrdersScreen() {
+  const { colors } = useDarkMode();
   const {
     response,
     loading,
@@ -86,21 +88,21 @@ export default function OrdersScreen() {
   const renderHeader = () => (
 
     <View
-      style={styles.header}
+      style={[styles.header, { backgroundColor: colors.headerBackground }]}
     >
       <SafeAreaView>
         <View style={styles.headerContent}>
           <View>
-            <Text style={styles.headerTitle}>My Orders</Text>
-            <Text style={styles.headerSubtitle}>
+            <Text style={[styles.headerTitle, { color: colors.headerText }]}>My Orders</Text>
+            <Text style={[styles.headerSubtitle, { color: `${colors.headerText}CC` }]}>
               {acceptedRequests.length} order{acceptedRequests.length !== 1 ? 's' : ''} placed
             </Text>
           </View>
 
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
-              <Text style={styles.statNumber}>{sentNotifications.length}</Text>
-              <Text style={styles.statLabel}>Total</Text>
+              <Text style={[styles.statNumber, { color: colors.headerText }]}>{sentNotifications.length}</Text>
+              <Text style={[styles.statLabel, { color: `${colors.headerText}CC` }]}>Total</Text>
             </View>
           </View>
         </View>
@@ -115,16 +117,16 @@ export default function OrdersScreen() {
 
     return (
       <TouchableOpacity onPress={() => handleViewOrderDetails(item)} activeOpacity={0.9}>
-        <View style={styles.orderCard}>
+        <View style={[styles.orderCard, { backgroundColor: colors.surface }]}>
           <View style={styles.orderHeader}>
             <View style={styles.orderInfo}>
-              <Text style={styles.orderTitle}>
+              <Text style={[styles.orderTitle, { color: colors.text }]}>
                 Order #{item.id}
               </Text>
-              <Text style={styles.productName}>
+              <Text style={[styles.productName, { color: colors.text }]}>
                 {item.productName || `Product #${item.productId}`}
               </Text>
-              <Text style={styles.sellerName}>
+              <Text style={[styles.sellerName, { color: colors.textSecondary }]}>
                 From {item.sellerName || "Unknown Seller"}
               </Text>
             </View>
@@ -158,27 +160,27 @@ export default function OrdersScreen() {
           <View style={styles.orderDetails}>
             <View style={styles.detailRow}>
               <View style={styles.detailItem}>
-                <Ionicons name="scale-outline" size={16} color="#6B7280" />
-                <Text style={styles.detailLabel}>Quantity</Text>
-                <Text style={styles.detailValue}>{item.desiredQuantity} kg</Text>
+                <Ionicons name="scale-outline" size={16} color={colors.textSecondary} />
+                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Quantity</Text>
+                <Text style={[styles.detailValue, { color: colors.text }]}>{item.desiredQuantity} kg</Text>
               </View>
 
               <View style={styles.detailItem}>
-                <Ionicons name="cash-outline" size={16} color="#6B7280" />
-                <Text style={styles.detailLabel}>Price</Text>
-                <Text style={styles.detailValue}>₹{item.desiredPricePerKg}/kg</Text>
+                <Ionicons name="cash-outline" size={16} color={colors.textSecondary} />
+                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Price</Text>
+                <Text style={[styles.detailValue, { color: colors.text }]}>₹{item.desiredPricePerKg}/kg</Text>
               </View>
             </View>
 
-            <View style={styles.totalContainer}>
-              <Text style={styles.totalLabel}>Total Amount:</Text>
-              <Text style={styles.totalAmount}>₹{totalAmount}</Text>
+            <View style={[styles.totalContainer, { backgroundColor: colors.background }]}>
+              <Text style={[styles.totalLabel, { color: colors.text }]}>Total Amount:</Text>
+              <Text style={[styles.totalAmount, { color: colors.primary }]}>₹{totalAmount}</Text>
             </View>
 
             {item.sendAt && (
               <View style={styles.dateContainer}>
-                <Ionicons name="calendar-outline" size={14} color="#6B7280" />
-                <Text style={styles.dateText}>
+                <Ionicons name="calendar-outline" size={14} color={colors.textSecondary} />
+                <Text style={[styles.dateText, { color: colors.textSecondary }]}>
                   Ordered on {new Date(item.sendAt).toLocaleDateString()}
                 </Text>
               </View>
@@ -205,14 +207,14 @@ export default function OrdersScreen() {
 
           <View style={styles.orderActions}>
             <TouchableOpacity
-              style={styles.chatButton}
+              style={[styles.chatButton, { backgroundColor: colors.background, borderColor: colors.primary }]}
               onPress={(e) => {
                 e.stopPropagation();
                 handleChatWithSeller(item.sellerId, item.sellerName, item.productId);
               }}
             >
-              <Ionicons name="chatbubble-outline" size={16} color="#8B5CF6" />
-              <Text style={styles.chatButtonText}>Chat with Seller</Text>
+              <Ionicons name="chatbubble-outline" size={16} color={colors.primary} />
+              <Text style={[styles.chatButtonText, { color: colors.primary }]}>Chat with Seller</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -222,31 +224,31 @@ export default function OrdersScreen() {
 
   if (loading && !refreshing) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
         <LoadingSpinner size="lg" />
-        <Text style={styles.loadingText}>Loading your orders...</Text>
+        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Loading your orders...</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.errorContainer}>
+      <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
         <Ionicons name="alert-circle-outline" size={48} color="#EF4444" />
-        <Text style={styles.errorText}>Failed to load orders</Text>
+        <Text style={[styles.errorText, { color: colors.text }]}>Failed to load orders</Text>
         {/* <Button title="Retry" onPress={refetch} /> */}
         <TouchableOpacity
           onPress={refetch}
-          className="mt-4 px-6 py-2 bg-blue-600 rounded-md self-center"
+          style={[styles.retryButton, { backgroundColor: colors.primary }]}
         >
-          <Text className="text-white font-semibold text-base text-center">Retry</Text>
+          <Text style={[styles.retryButtonText, { color: colors.surface }]}>Retry</Text>
         </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={sentNotifications}
         keyExtractor={(item) => item.id.toString()}
@@ -258,11 +260,11 @@ export default function OrdersScreen() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         ListEmptyComponent={
-          <View style={styles.emptyCard}>
+          <View style={[styles.emptyCard, { backgroundColor: colors.surface }]}>
             <View style={{ alignItems: "center" }}>
               <Ionicons name="receipt-outline" size={48} color="#9CA3AF" />
-              <Text style={styles.emptyTitle}>No orders yet</Text>
-              <Text style={styles.emptySubtitle}>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>No orders yet</Text>
+              <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
                 When you request products from sellers, they'll appear here
               </Text>
             </View>
@@ -276,12 +278,8 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
   },
-  header: {
-    paddingBottom: 20,
-    backgroundColor: "#3B82F6",
-  },
+  header: { paddingBottom: 20 },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -292,11 +290,9 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#FFFFFF',
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#DBEAFE',
     marginTop: 4,
   },
   statsContainer: {
@@ -308,11 +304,9 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#FFFFFF',
   },
   statLabel: {
     fontSize: 12,
-    color: '#DBEAFE',
     marginTop: 2,
   },
   listContent: {
@@ -334,18 +328,15 @@ const styles = StyleSheet.create({
   orderTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
     marginBottom: 4,
   },
   productName: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
     marginBottom: 2,
   },
   sellerName: {
     fontSize: 12,
-    color: '#6B7280',
   },
   statusBadge: {
     flexDirection: 'row',
@@ -393,20 +384,17 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 14,
-    color: '#6B7280',
     marginLeft: 6,
     marginRight: 4,
   },
   detailValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#111827',
   },
   totalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
@@ -414,12 +402,10 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#374151',
   },
   totalAmount: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#3B82F6',
   },
   dateContainer: {
     flexDirection: 'row',
@@ -427,7 +413,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 12,
-    color: '#6B7280',
     marginLeft: 6,
   },
   successMessage: {
@@ -465,7 +450,6 @@ const styles = StyleSheet.create({
   chatButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F3F4F6',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
@@ -474,7 +458,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   chatButtonText: {
-    color: '#8B5CF6',
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 4,
@@ -483,26 +466,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
   },
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: '#6B7280',
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
     paddingHorizontal: 20,
   },
-  // errorText: {
-  //   fontSize: 18,
-  //   color: '#EF4444',
-  //   marginVertical: 16,
-  //   textAlign: 'center',
-  // },
+  errorText: {
+    fontSize: 18,
+    marginVertical: 16,
+    textAlign: 'center',
+  },
+  retryButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  retryButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
   emptyCard: {
     alignItems: 'center',
     paddingVertical: 40,
@@ -512,12 +502,10 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#374151',
     marginTop: 16,
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#6B7280',
     marginTop: 8,
     textAlign: 'center',
   },
