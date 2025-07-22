@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { clearBadge } from "@/store/badgeSlice";
+import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { useDarkMode } from "@/app/context/DarkModeContext";
@@ -47,6 +47,12 @@ export default function ChatScreen() {
     fetchConversations();
     getCurrentUserId();
   }, []);
+
+  // Update badge count when conversations change
+  useEffect(() => {
+    const totalUnread = users.reduce((sum, user) => sum + user.unreadCount, 0);
+    dispatch(setBadgeCount({ type: 'chat', count: totalUnread }));
+  }, [users, dispatch]);
 
   // Clear chat badge when screen is focused
   useFocusEffect(

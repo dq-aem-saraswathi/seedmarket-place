@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { getSentNotifications } from "@/api/services";
-import { useApi } from "@/hooks/useApi";
+import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
@@ -36,6 +36,18 @@ export default function OrdersScreen() {
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  // Update badge count when data changes
+  useEffect(() => {
+    dispatch(setBadgeCount({ type: 'orders', count: acceptedRequests.length }));
+  }, [acceptedRequests.length, dispatch]);
+
+  // Clear orders badge when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(clearBadge('orders'));
+    }, [dispatch])
+  );
 
   const handleChatWithSeller = (sellerId: string, sellerName: string, productId: number) => {
     router.push({

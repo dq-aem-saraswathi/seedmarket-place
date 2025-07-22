@@ -16,7 +16,7 @@ import {
   setLastReadTimestamp, 
   clearNotification 
 } from "@/store/notificationSlice";
-import { clearBadge } from "@/store/badgeSlice";
+import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Notification } from "@/api/types";
@@ -41,6 +41,12 @@ export default function NotificationsScreen() {
     });
   }, []);
   const dispatch = useDispatch();
+
+  // Update badge count when notifications change
+  useEffect(() => {
+    const unreadCount = notifications.filter(n => !n.isRead && !n.isClear).length;
+    dispatch(setBadgeCount({ type: 'notifications', count: unreadCount }));
+  }, [notifications, dispatch]);
 
   // Clear badge and mark notifications as read when screen is focused
   useFocusEffect(

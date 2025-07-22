@@ -6,6 +6,8 @@ import { View, Text, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getNotifications,
+  getSentNotifications,
+  getReceivedNotifications,
 } from "@/api/services";
 import {
   connectWebSocket,
@@ -20,10 +22,17 @@ import {
   addNotification, 
   selectNewNotificationsCount 
 } from "@/store/notificationSlice";
+import { 
+  addNewOrder, 
+  addNewOrderRequest,
+  fetchSentOrders,
+  fetchReceivedOrders 
+} from "@/store/ordersSlice";
 import { addMessage } from "@/store/chatSlice";
 import { 
   setBadgeCount, 
   incrementBadge, 
+  decrementBadge,
   selectBadges 
 } from "@/store/badgeSlice";
 import { RootState } from "@/store";
@@ -45,10 +54,32 @@ export default function TabsLayout() {
 
   const fetchAllNotifications = async () => {
     try {
-      const [notifications] = await Promise.all([getNotifications()]);
+      const [notifications, sentOrders, receivedOrders] = await Promise.all([
+        getNotifications(),
+        getSentNotifications(),
+        getReceivedNotifications()
+      ]);
+      
       const received = notifications?.response || [];
       logger.info("Fetched notifications", { count: received.length });
       dispatch(setNotifications(received));
+      
+      // Update orders in store
+      dispatch(fetchSentOrders());
+      dispatch(fetchReceivedOrders());
+      
+      // Update badge counts
+      const pendingSentOrders = (sentOrders?.response || []).filter(
+        (order: any) => order.requestStatus === 'PENDING'
+      ).length;
+      
+      const pendingReceivedOrders = (receivedOrders?.response || []).filter(
+        (order: any) => order.requestStatus === 'PENDING'
+      ).length;
+      
+      dispatch(setBadgeCount({ type: 'orders', count: pendingSentOrders }));
+      dispatch(setBadgeCount({ type: 'sales', count: pendingReceivedOrders }));
+      
     } catch (err) {
       logger.error("Notification fetch failed", err);
     }
@@ -66,6 +97,7 @@ export default function TabsLayout() {
           logger.wsMessage("Seller notification received", newNotif);
           dispatch(addNotification(newNotif));
           dispatch(incrementBadge('sales'));
+          dispatch(addNewOrderRequest(newNotif));
         } catch (err) {
           logger.error("WebSocket message parse error", err);
         }
@@ -77,6 +109,7 @@ export default function TabsLayout() {
           logger.wsMessage("Buyer notification received", newNotif);
           dispatch(addNotification(newNotif));
           dispatch(incrementBadge('orders'));
+          dispatch(addNewOrder(newNotif));
         } catch (err) {
           logger.error("WebSocket message parse error", err);
         }

@@ -5,7 +5,19 @@ import "./global.css";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { DarkModeProvider } from "@/app/context/DarkModeContext";
 import { useFrameworkReady } from "@/hooks/useFrameworkReady";
-import { StatusBar } from "expo-status-bar";
+import { StatusBar, setStatusBarStyle } from "expo-status-bar";
+import { useDarkMode } from "@/app/context/DarkModeContext";
+import { useEffect } from "react";
+
+function StatusBarManager() {
+  const { isDarkMode } = useDarkMode();
+
+  useEffect(() => {
+    setStatusBarStyle(isDarkMode ? 'light' : 'dark');
+  }, [isDarkMode]);
+
+  return <StatusBar style={isDarkMode ? 'light' : 'dark'} />;
+}
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -13,7 +25,7 @@ export default function RootLayout() {
     <AuthProvider>
       <DarkModeProvider>
         <Provider store={store}>
-          <StatusBar style="auto" />
+          <StatusBarManager />
           <Slot />
         </Provider>
       </DarkModeProvider>

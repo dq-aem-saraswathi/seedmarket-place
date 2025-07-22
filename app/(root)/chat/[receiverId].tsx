@@ -14,7 +14,7 @@ import {
 import { useLocalSearchParams, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import { clearBadge } from "@/store/badgeSlice";
+import { clearBadge, decrementBadge } from "@/store/badgeSlice";
 import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { useDarkMode } from "@/app/context/DarkModeContext";
@@ -53,7 +53,8 @@ export default function ChatDetailScreen() {
   // Clear chat badge when entering specific chat
   useFocusEffect(
     useCallback(() => {
-      dispatch(clearBadge('chat'));
+      // Decrement badge instead of clearing completely
+      dispatch(decrementBadge('chat'));
     }, [dispatch])
   );
 

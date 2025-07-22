@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Appearance, ColorSchemeName, StatusBar, Platform } from "react-native";
+import { Appearance, ColorSchemeName } from "react-native";
 
 interface DarkModeContextProps {
   isDarkMode: boolean;
@@ -78,9 +78,6 @@ export const DarkModeProvider = ({
   useEffect(() => {
     // Load saved preference
     loadDarkModePreference();
-    
-    // Update StatusBar when dark mode changes
-    StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content', true);
 
     // Listen to system changes
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
@@ -90,7 +87,7 @@ export const DarkModeProvider = ({
     });
 
     return () => subscription?.remove();
-  }, [isDarkMode]);
+  }, []);
 
   const loadDarkModePreference = async () => {
     try {
@@ -122,7 +119,6 @@ export const DarkModeProvider = ({
     try {
       const newMode = !isDarkMode;
       setIsDarkMode(newMode);
-      StatusBar.setBarStyle(newMode ? 'light-content' : 'dark-content', true);
       await AsyncStorage.setItem("darkModePreference", JSON.stringify(newMode));
     } catch (error) {
       console.error("Error saving dark mode preference:", error);

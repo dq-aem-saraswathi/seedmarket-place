@@ -19,7 +19,7 @@ import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import AnimatedCard from "@/app/components/ui/AnimatedCard";
 import { router } from "expo-router";
 import { useDispatch } from "react-redux";
-import { clearBadge } from "@/store/badgeSlice";
+import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import { useFocusEffect } from "expo-router";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
@@ -42,6 +42,11 @@ export default function SalesScreen() {
     await refetch();
     setRefreshing(false);
   }, [refetch]);
+
+  // Update badge count when data changes
+  useEffect(() => {
+    dispatch(setBadgeCount({ type: 'sales', count: pendingRequests.length }));
+  }, [pendingRequests.length, dispatch]);
 
   // Clear sales badge when screen is focused
   useFocusEffect(
