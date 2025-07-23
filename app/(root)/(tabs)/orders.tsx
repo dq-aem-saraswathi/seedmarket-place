@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,14 +11,18 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useDispatch } from "react-redux";
 import { getSentNotifications } from "@/api/services";
+import { useApi } from "@/hooks/useApi";
+import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
 export default function OrdersScreen() {
   const { colors } = useDarkMode();
+  const dispatch = useDispatch();
   const {
     response,
     loading,
@@ -27,7 +32,7 @@ export default function OrdersScreen() {
 
   const sentNotifications = response?.response ?? [];
   const [refreshing, setRefreshing] = React.useState(false);
-  const acceptedRequests = sentNotifications.filter(
+  const pendingRequests = sentNotifications.filter(
     (item) => item.requestStatus === "PENDING"
   );
 
@@ -38,9 +43,9 @@ export default function OrdersScreen() {
   }, [refetch]);
 
   // Update badge count when data changes
-  useEffect(() => {
-    dispatch(setBadgeCount({ type: 'orders', count: acceptedRequests.length }));
-  }, [acceptedRequests.length, dispatch]);
+  React.useEffect(() => {
+    dispatch(setBadgeCount({ type: 'orders', count: pendingRequests.length }));
+  }, [pendingRequests.length, dispatch]);
 
   // Clear orders badge when screen is focused
   useFocusEffect(
@@ -107,7 +112,7 @@ export default function OrdersScreen() {
           <View>
             <Text style={[styles.headerTitle, { color: colors.headerText }]}>My Orders</Text>
             <Text style={[styles.headerSubtitle, { color: `${colors.headerText}CC` }]}>
-              {acceptedRequests.length} order{acceptedRequests.length !== 1 ? 's' : ''} placed
+              {pendingRequests.length} pending order{pendingRequests.length !== 1 ? 's' : ''}
             </Text>
           </View>
 

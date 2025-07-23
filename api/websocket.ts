@@ -14,6 +14,7 @@ const WS_URL = `http://192.168.1.27:8081/ws`;
 export const connectWebSocket = (onReady: () => void) => {
   // Disconnect existing connection if any
   if (stompClient && stompClient.connected) {
+    logger.info("Disconnecting existing WebSocket connection");
     stompClient.deactivate();
   }
 
@@ -21,9 +22,9 @@ export const connectWebSocket = (onReady: () => void) => {
   stompClient = new Client({
     webSocketFactory: () => socket,
     debug: (str) => logger.debug("WebSocket Debug", str),
-    reconnectDelay: 5000,
-    heartbeatIncoming: 4000,
-    heartbeatOutgoing: 4000,
+    reconnectDelay: 3000,
+    heartbeatIncoming: 10000,
+    heartbeatOutgoing: 10000,
     onConnect: () => {
       logger.wsConnect(WS_URL);
       onReady(); // trigger subscriptions
@@ -34,14 +35,16 @@ export const connectWebSocket = (onReady: () => void) => {
     onStompError: (frame) => {
       logger.wsError(frame);
       // Attempt to reconnect after error
-      setTimeout(() => {
-        if (!stompClient?.connected) {
+      if (!stompClient?.connected) {
+        setTimeout(() => {
+          logger.info("Attempting to reconnect WebSocket after error");
           connectWebSocket(onReady);
-        }
-      }, 5000);
+        }, 3000);
+      }
     },
   });
 
+  logger.info("Activating WebSocket connection");
   stompClient.activate();
 };
 

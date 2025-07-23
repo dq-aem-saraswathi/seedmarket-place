@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,12 +11,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
-import { useFocusEffect } from "expo-router";
-import { useCallback } from "react";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
 import { getAllUsers, getChatConversations } from "@/api/services";

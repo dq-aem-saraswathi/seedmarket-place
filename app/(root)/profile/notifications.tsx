@@ -43,7 +43,7 @@ export default function NotificationsScreen() {
   const dispatch = useDispatch();
 
   // Update badge count when notifications change
-  useEffect(() => {
+  React.useEffect(() => {
     const unreadCount = notifications.filter(n => !n.isRead && !n.isClear).length;
     dispatch(setBadgeCount({ type: 'notifications', count: unreadCount }));
   }, [notifications, dispatch]);

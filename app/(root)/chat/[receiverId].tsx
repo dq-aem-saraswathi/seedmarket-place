@@ -53,8 +53,10 @@ export default function ChatDetailScreen() {
   // Clear chat badge when entering specific chat
   useFocusEffect(
     useCallback(() => {
-      // Decrement badge instead of clearing completely
-      dispatch(decrementBadge('chat'));
+      // Only decrement if there are unread messages for this conversation
+      if (messages.length > 0) {
+        dispatch(decrementBadge('chat'));
+      }
     }, [dispatch])
   );
 

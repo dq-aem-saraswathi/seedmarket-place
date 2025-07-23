@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -17,10 +18,9 @@ import {
 import { useApi } from "@/hooks/useApi";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import AnimatedCard from "@/app/components/ui/AnimatedCard";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useDispatch } from "react-redux";
 import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
-import { useFocusEffect } from "expo-router";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
 export default function SalesScreen() {
@@ -44,7 +44,7 @@ export default function SalesScreen() {
   }, [refetch]);
 
   // Update badge count when data changes
-  useEffect(() => {
+  React.useEffect(() => {
     dispatch(setBadgeCount({ type: 'sales', count: pendingRequests.length }));
   }, [pendingRequests.length, dispatch]);
 
