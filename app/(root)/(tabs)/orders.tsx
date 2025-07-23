@@ -15,7 +15,6 @@ import { useDispatch } from "react-redux";
 import { getSentNotifications } from "@/api/services";
 import { useApi } from "@/hooks/useApi";
 import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
-import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
 import LoadingSpinner from "@/app/components/ui/LoadingSpinner";
 import { useDarkMode } from "@/app/context/DarkModeContext";
 
