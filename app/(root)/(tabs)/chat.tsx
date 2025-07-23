@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,10 +7,12 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { router, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { clearBadge, setBadgeCount } from "@/store/badgeSlice";
@@ -41,6 +42,7 @@ export default function ChatScreen() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchConversations();
@@ -77,6 +79,13 @@ export default function ChatScreen() {
     const userId = await AsyncStorage.getItem("userId");
     setCurrentUserId(userId);
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchConversations();
+    setRefreshing(false);
+  }, []);
+
   const fetchConversations = async () => {
     try {
       setLoading(true);
@@ -232,6 +241,9 @@ export default function ChatScreen() {
         renderItem={renderChatItem}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         ListEmptyComponent={
           <AnimatedCard style={styles.emptyCard}>
             <View style={styles.emptyContent}>
